@@ -7,7 +7,7 @@ This automated setup is currently only configured for Fedora machines.
 ## How to run
 
 ```shell
-export GITHUB_USERNAME=logandonley
+export GITHUB_USERNAME=fn-jakubkarp
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply $GITHUB_USERNAME
 
 ```
