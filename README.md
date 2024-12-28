@@ -1,8 +1,13 @@
 # dotfiles
 
-This repo contains the configuration to setup my machines. This is using [Chezmoi](https://chezmoi.io), the dotfile manager to setup the install.
+System Configuration
+Author: Jakub Karp
 
-This automated setup is currently only configured for Fedora machines.
+## Description
+This repository was created to store my system configuration to quickly set up a new machine on Debian-based systems.
+If you with to use this configuration, feel free fork this repository and change the GITHUB_USERNAME in the command below to your own.
+
+It is inspired by other dotfiles repositories.
 
 ## How to run
 
