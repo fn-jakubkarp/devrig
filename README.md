@@ -9,4 +9,6 @@ This automated setup is currently only configured for Fedora machines.
 ```shell
 export GITHUB_USERNAME=logandonley
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply $GITHUB_USERNAME
+
+ansible-playbook setup.yml --extra-vars "chezmoi_repo=your_repo_url"
 ```
