@@ -2,7 +2,7 @@
 
 # Initialize 00_prepare.sh
 echo "Initializing 00_prepare.sh..."
-source ./scripts/00_prepare.sh
+source ./source/00_prepare.sh
 success "00_prepare.sh initialized successfully!"
 
 
@@ -23,7 +23,7 @@ run_with_sudo() {
 
 # Run the Ansible installation and playbook setup
 info "Running Ansible setup..."
-run_with_sudo bash ./source/00_ansible.sh
+run_with_sudo bash ./source/10_ansible.sh
 # Check if the Ansible setup was successful
 if [ $? -eq 0 ]; then
   success "Ansible setup completed successfully!"
@@ -34,7 +34,7 @@ fi
 
 # Run the SSH setup script
 info "Running SSH setup..."
-run_with_sudo bash ./source/01_ssh.sh
+run_with_sudo bash ./source/20_ssh.sh
 
 # Check if the SSH setup was successful
 if [ $? -eq 0 ]; then
