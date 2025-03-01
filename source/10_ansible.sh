@@ -17,6 +17,4 @@ fi
 
 # Run the Ansible playbook to install everything
 echo "Running the Ansible playbook..."
-ansible-playbook ansible/playbook.yml
-
-echo "Setup completed successfully!"
+ansible-playbook -i ansible/hosts ansible/playbook.yml
