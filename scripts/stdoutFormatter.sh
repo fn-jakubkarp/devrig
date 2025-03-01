@@ -48,7 +48,7 @@ failed() {
 
 info() {
   echo -e "${BLUE}${DIVIDER}${NC}"
-  echo -e "${BLUE}${UNDERLINE}${INFO} [INFO]: $1 ${NC}"
+  echo -e "${BLUE}${UNDERLINE}${INFO}  [INFO]: $1 ${NC}"
   echo -e "${BLUE}${DIVIDER}${NC}"
 }
 

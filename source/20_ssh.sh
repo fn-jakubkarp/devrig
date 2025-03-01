@@ -20,9 +20,5 @@ eval $(ssh-agent -s)
 ssh-add ~/.ssh/id_ed25519
 
 # Test the connection to GitHub
-if ssh -T git@github.com; then
-    echo "Successfully authenticated with GitHub."
-else
-    echo "GitHub authentication failed."
-    exit 1
-fi
+ssh -T git@github.com; 
+
