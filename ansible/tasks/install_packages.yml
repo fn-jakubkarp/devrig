@@ -12,7 +12,6 @@
       - htop
       - unzip
       - ripgrep
-      - fdfind
       - docker.io
       - docker-compose
       - openjdk-11-jdk
