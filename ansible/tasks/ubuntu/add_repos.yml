@@ -1,6 +1,4 @@
 - name: Add commonly used Ubuntu repositories and Flatpak remote
-  hosts: localhost
-  become: yes
   tasks:
     - name: Add universe repository
       apt_repository:
