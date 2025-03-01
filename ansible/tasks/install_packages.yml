@@ -9,9 +9,7 @@
       - software-properties-common
       - tmux
       - python3-pip
-      - npm
       - yarn
-      - code
       - htop
       - unzip
       - ripgrep
