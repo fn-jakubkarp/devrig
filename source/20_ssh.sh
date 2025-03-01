@@ -20,5 +20,12 @@ eval $(ssh-agent -s)
 ssh-add ~/.ssh/id_ed25519
 
 # Test the connection to GitHub
-ssh -T git@github.com; 
+SSH_OUTPUT=$(ssh -T git@github.com 2>&1)
+if [[ "$SSH_OUTPUT" == *"You've successfully authenticated, but GitHub does not provide shell access."* ]]; then
+  success "SSH setup completed successfully!"
+else
+  failed "SSH setup failed. Please check the logs for errors."
+  echo "$SSH_OUTPUT"
+  exit 1
+fi
 

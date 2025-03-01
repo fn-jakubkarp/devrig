@@ -33,16 +33,9 @@ else
 fi
 
 # Run the SSH setup script
+# Validation is done in the script itself
 info "Running SSH setup..."
 run_with_sudo bash ./source/20_ssh.sh
-
-# Check if the SSH setup was successful
-if [ $? -eq 0 ]; then
-  success "SSH setup completed successfully!"
-else
-  failed "SSH setup failed. Please check the logs for errors."
-  exit 1
-fi
 
 
 success "All setup tasks completed successfully!"
