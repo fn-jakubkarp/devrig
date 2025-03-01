@@ -1,10 +1,12 @@
 #!/bin/bash
 
+# Load the stdoutFormatter.sh script
+source ./scripts/stdoutFormatter.sh
+
 # Initialize 00_prepare.sh
-echo "Initializing 00_prepare.sh..."
+info "Initializing 00_prepare.sh..."
 source ./source/00_prepare.sh
 success "00_prepare.sh initialized successfully!"
-
 
 # Ensure the script is being run from the root of the repo
 if [ ! -d ".git" ]; then
@@ -22,7 +24,7 @@ run_with_sudo() {
 }
 
 # Run the Ansible installation and playbook setup
-info "Running Ansible setup..."
+info "Initializing 10_ansible.sh setup..."
 run_with_sudo bash ./source/10_ansible.sh
 # Check if the Ansible setup was successful
 if [ $? -eq 0 ]; then
@@ -34,8 +36,7 @@ fi
 
 # Run the SSH setup script
 # Validation is done in the script itself
-info "Running SSH setup..."
+info "Initializing 20_ssh.sh setup..."
 run_with_sudo bash ./source/20_ssh.sh
-
 
 success "All setup tasks completed successfully!"
