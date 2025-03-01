@@ -4,18 +4,20 @@
   vars_files:
     - vars/main.yml
   tasks:
+    # Common tasks for all systems (WSL & Linux)
     - include_tasks: tasks/common/install_packages.yml
     - include_tasks: tasks/common/configure_git.yml
 
-    - name: Add Repositories on Ubuntu
-      when: ansible_facts['distribution'] == 'Ubuntu' and not ansible_facts['kernel'].startswith('Microsoft')
-      include_tasks: tasks/ubuntu/add_repos.yml
+    # Tasks for full Linux distributions (NOT WSL)
+    - name: Add Repositories on Linux (Non-WSL)
+      when: "'microsoft' not in ansible_facts['kernel'].lower()"
+      include_tasks: tasks/linux/add_repos.yml
 
-    - name: Add Flatpak on Ubuntu
-      when: ansible_facts['distribution'] == 'Ubuntu' and not ansible_facts['kernel'].startswith('Microsoft')
-      include_tasks: tasks/ubuntu/add_flatpak_software.yml
+    - name: Add Flatpak on Linux (Non-WSL)
+      when: "'microsoft' not in ansible_facts['kernel'].lower()"
+      include_tasks: tasks/linux/add_flatpak_software.yml
 
-    # This will be only on WSL
-    # - name: Only on WSL
-    #   when: ansible_facts['distribution'] == 'Ubuntu' and 'microsoft' in ansible_facts['distribution_version'].lower()
-    #   include_tasks: tasks/setup_wsl_config.yml
+    # Tasks for WSL-only
+    # - name: Configure WSL-specific settings
+    #   when: "'microsoft' in ansible_facts['kernel'].lower() or 'WSL_DISTRO_NAME' in ansible_env"
+    #   include_tasks: tasks/wsl/setup_wsl_config.yml
