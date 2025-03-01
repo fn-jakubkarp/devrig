@@ -1,1 +1,2 @@
 default_user: "{{ ansible_user }}"
+zsh_path: /usr/bin/zsh

@@ -13,6 +13,10 @@
       - yarn
       - nvm
       - code
-
+      - htop
+      - unzip
+      - ripgrep
+      - fdfind
+      - corepack
     state: present
     update_cache: yes

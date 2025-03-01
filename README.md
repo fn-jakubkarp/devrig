@@ -1,4 +1,4 @@
-# dotfiles
+## dotfiles
 
 System Configuration
 Author: Jakub Karp
@@ -17,3 +17,10 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply $GITHUB_USERNAME
 
 ```
 
+```shell
+export GITHUB_USERNAME=fn-jakubkarp
+git clone https://github.com/$GITHUB_USERNAME/dotfiles.git
+cd ~/dotfiles
+sudo chmod +x install.sh
+./install.sh
+```
