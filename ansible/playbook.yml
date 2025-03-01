@@ -7,9 +7,12 @@
     - include_tasks: tasks/common/install_packages.yml
     - include_tasks: tasks/common/configure_git.yml
 
-    - name: Only on Ubuntu
+    - name: Add Repositories on Ubuntu
       when: ansible_facts['distribution'] == 'Ubuntu' and 'microsoft' not in ansible_facts['distribution_version'].lower()
       include_tasks: tasks/ubuntu/add_repos.yml
+
+    - name: Add Flatpak on Ubuntu
+      when: ansible_facts['distribution'] == 'Ubuntu' and 'microsoft' not in ansible_facts['distribution_version'].lower()
       include_tasks: tasks/ubuntu/add_flatpak.yml
 
     # This will be only on WSL
