@@ -32,6 +32,11 @@
         repo: 'deb http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner'
         state: present
 
+    - name: Install Flatpak
+      apt:
+        name: flatpak
+        state: present
+
     - name: Add Flatpak remote for Flathub
       command:
         cmd: flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo

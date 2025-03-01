@@ -13,7 +13,7 @@
 
     - name: Add Flatpak on Ubuntu
       when: ansible_facts['distribution'] == 'Ubuntu' and 'microsoft' not in ansible_facts['distribution_version'].lower()
-      include_tasks: tasks/ubuntu/add_flatpak.yml
+      include_tasks: tasks/ubuntu/add_flatpak_software.yml
 
     # This will be only on WSL
     # - name: Only on WSL
