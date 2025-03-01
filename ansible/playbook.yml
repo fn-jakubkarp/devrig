@@ -5,6 +5,9 @@
   vars_files:
     - vars/main.yml
   tasks:
+    # This will be on ubuntu and wsl
     - include_tasks: tasks/install_packages.yml
     - include_tasks: tasks/install_zsh.yml
     - include_tasks: tasks/configure_git.yml
+    # This will be only on ubuntu
+    - include_tasks: tasks/add_ubuntu_repos.yml

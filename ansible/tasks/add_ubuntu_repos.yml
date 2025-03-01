@@ -1,0 +1,44 @@
+- name: Add commonly used Ubuntu repositories and Flatpak remote
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Add universe repository
+      apt_repository:
+        repo: 'ppa:ubuntu-mozilla-security/ppa'
+        state: present
+
+    - name: Add multiverse repository
+      apt_repository:
+        repo: 'deb http://archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} multiverse'
+        state: present
+
+    - name: Add backports repository
+      apt_repository:
+        repo: 'deb http://archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} backports'
+        state: present
+
+    - name: Add security updates repository
+      apt_repository:
+        repo: 'deb http://security.ubuntu.com/ubuntu {{ ansible_distribution_release }}-security main restricted'
+        state: present
+
+    - name: Add proposed repository
+      apt_repository:
+        repo: 'deb http://archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }}-proposed universe'
+        state: present
+
+    - name: Add partner repository (for certain proprietary software)
+      apt_repository:
+        repo: 'deb http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner'
+        state: present
+
+    - name: Add Flatpak remote for Flathub
+      command:
+        cmd: flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+      register: flatpak_result
+      failed_when: flatpak_result.rc != 0 and flatpak_result.rc != 1
+      changed_when: flatpak_result.rc == 1  # Flatpak might report rc 1 if repo already exists, consider it as no change
+
+    - name: Update apt cache after adding repositories
+      apt:
+        update_cache: yes
