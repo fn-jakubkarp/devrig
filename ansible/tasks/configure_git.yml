@@ -1,6 +1,6 @@
 ---
 - name: Copy gitconfig
   copy:
-    src: "{{ playbook_dir }}/git_conf/.gitconfig"
+    src: "{{ playbook_dir }}/../git_conf/.gitconfig"
     dest: "{{ ansible_env.HOME }}/.gitconfig"
     remote_src: no
