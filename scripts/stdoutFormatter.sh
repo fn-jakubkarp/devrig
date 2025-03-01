@@ -3,9 +3,9 @@
 # Colors
 export RED='\033[0;31m'
 export GREEN='\033[0;32m'
-export YELLOW='\033[0;33m'
-export BLUE='\033[0;34m'
-export PURPLE='\033[0;35m'
+export YELLOW='\033[1;33m'
+export BLUE='\033[1;36m'
+export PURPLE='\033[1;35m'
 
 export NC='\033[0m' # No color
 
@@ -24,7 +24,7 @@ export UNDERLINE='\033[4m'
 export INVERT='\033[7m'
 
 # Unicode characters
-export CHECKMARK='\xE2\x9C\x94'
+export CHECKMARK='\u2705'
 export CROSSMARK='\xE2\x9C\x98'
 export WARNING='\xE2\x9A\xA0'
 export INFO='\xE2\x84\xB9'
@@ -35,31 +35,31 @@ export DIVIDER='------------------------------------------'
 
 
 success() {
-  echo -e "${DIVIDER}"
-  echo -e "${GREEN}${BOLD}${CHECKMARK} SUCCESS: $1 ${NC}"
-  echo -e "${DIVIDER}"
+  echo -e "${GREEN}${DIVIDER}${NC}"
+  echo -e "${GREEN}${BOLD}${CHECKMARK} [SUCCESS]: $1 ${NC}"
+  echo -e "${GREEN}${DIVIDER}${NC}"
 }
 
 failed() {
-  echo -e "${DIVIDER}"
-  echo -e "${RED}${BOLD}${CROSSMARK} FAILED: $1 ${NC}"
-  echo -e "${DIVIDER}"
+  echo -e "${RED}${DIVIDER}${NC}"
+  echo -e "${RED}${BOLD}${CROSSMARK} [FAILED]: $1 ${NC}"
+  echo -e "${RED}${DIVIDER}${NC}"
 }
 
 info() {
-  echo -e "${DIVIDER}"
-  echo -e "${BLUE}${UNDERLINE}${INFO} INFO: $1 ${NC}"
-  echo -e "${DIVIDER}"
+  echo -e "${BLUE}${DIVIDER}${NC}"
+  echo -e "${BLUE}${UNDERLINE}${INFO} [INFO]: $1 ${NC}"
+  echo -e "${BLUE}${DIVIDER}${NC}"
 }
 
 question() {
-  echo -e "${DIVIDER}"
-  echo -e "${PURPLE}${BOLD}${QUESTION} QUESTION: $1 ${NC}"
-  echo -e "${DIVIDER}"
+  echo -e "${PURPLE}${DIVIDER}${NC}"
+  echo -e "${PURPLE}${BOLD}${QUESTION} [QUESTION]: $1 ${NC}"
+  echo -e "${PURPLE}${DIVIDER}${NC}"
 }
 
 warning() {
-  echo -e "${DIVIDER}"
-  echo -e "${YELLOW}${UNDERLINE}${WARNING} WARNING: $1 ${NC}"
-  echo -e "${DIVIDER}"
+  echo -e "${YELLOW}${DIVIDER}${NC}"
+  echo -e "${YELLOW}${UNDERLINE}${WARNING} [WARNING]: $1 ${NC}"
+  echo -e "${YELLOW}${DIVIDER}${NC}"
 }
