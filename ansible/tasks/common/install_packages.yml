@@ -2,6 +2,10 @@
 - name: Install essential packages
   apt:
     name:
+      - 7zip
+      - gh
+      - ffmpeg
+      - ftp
       - zsh
       - git
       - curl
