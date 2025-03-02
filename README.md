@@ -1,6 +1,6 @@
 # 🚀 dotfiles
 
-<img align="right" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmUzM2JwNmtrNnZjZGJtNGppbnA3azJ0M25uNnhlcGkwdzVsdjJtaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kH6CqYiquZawmU1HI6/giphy.gif" width="200"/>
+<img align="right" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTI4NzE1dmhtcm04c3dlN29iaG4zd2owZHBwczJxbXYwOHVtdGZiaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/aer096d3vD4rYVsgNn/giphy.gif" width="200" height="200" />
 <p><i>One command to rule them all - your personal Ubuntu dev environment automation</i></p>
 <img src="https://img.shields.io/badge/Platform-Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" alt="Ubuntu" />
 <img src="https://img.shields.io/badge/Compatible-WSL-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="WSL Compatible" />
