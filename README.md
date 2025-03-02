@@ -22,7 +22,7 @@ The current setup is almost entirely based on his foundation, and I’m graduall
 <p><i>One command to rule them all - your personal Ubuntu dev environment automation</i></p>
 <img src="https://img.shields.io/badge/Platform-Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" alt="Ubuntu" />
 <img src="https://img.shields.io/badge/Compatible-WSL-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="WSL Compatible" />
-<img src="https://img.shields.io/badge/Coming%20Soon-macOS-000000?style=for-the-badge&logo=apple&logoColor=white" alt="macOS Coming Soon" />
+<img src="https://img.shields.io/badge/Coming%20(but%20not%20so%20soon)-macOS-000000?style=for-the-badge&logo=apple&logoColor=white" alt="macOS Coming Soon" />
 
 &nbsp;
 <hr>
