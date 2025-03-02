@@ -1,5 +1,6 @@
 - name: Setup dotfiles and configurations
   hosts: localhost
+  connection: local
   become: yes
   vars_files:
     - vars/main.yml

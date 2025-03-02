@@ -1,6 +1,6 @@
----
-- name: DotFiles Config
+- name: Setup dotfiles and configurations
   hosts: localhost
+  become: yes
   connection: local
 
   pre_tasks:

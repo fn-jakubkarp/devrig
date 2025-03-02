@@ -1,8 +1,7 @@
 default_roles:
-  - system
-  - bitwarden_cli
+  # - bitwarden_cli
   - bash
-  - bat
+  # - bat
   - btop
   - discord
   - docker
@@ -13,7 +12,6 @@ default_roles:
   - git
   - go
   - lazygit
-  - lsd
   - lua
   - neofetch
   - neovim
@@ -22,7 +20,7 @@ default_roles:
   - nvm
   - python
   - rust
-  - ssh
+  # - ssh
   - starship
   - taskfile
   - tldr
