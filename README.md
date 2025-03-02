@@ -45,7 +45,7 @@ The current setup is almost entirely based on his foundation, and I’m graduall
 
 ## 🎯 Features
 
-<p align="left"><i>What DevRig currently offers</i></p>
+<p align="left"><i>What devrig currently offers</i></p>
 
 - 🖥️ **Terminal Environment** - ZSH, Oh My Zsh, and terminal utilities
 - 🔧 **Dotfiles Management** - Backs up and sets up my personal configs
@@ -88,10 +88,10 @@ The current setup is almost entirely based on his foundation, and I’m graduall
 
 ```bash
 # Clone this repository
-git clone https://github.com/fn-jakubkarp/DevRig.git
+git clone https://github.com/fn-jakubkarp/devrig.git
 
 # Navigate to the project directory
-cd DevRig
+cd devrig
 
 # Run the setup script
 ./setup.sh
