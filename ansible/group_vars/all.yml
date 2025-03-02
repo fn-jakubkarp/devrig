@@ -1,7 +1,6 @@
 default_roles:
-  # - bitwarden_cli
   - bash
-  # - bat
+  - bat
   - btop
   - discord
   - docker
@@ -20,36 +19,9 @@ default_roles:
   - nvm
   - python
   - rust
-  # - ssh
-  - starship
+  # - starship 
   - taskfile
   - tldr
   - tmux
   - zoxide
   - zsh
-
-git_user_name: "lirin"
-op:
-  git:
-    user:
-      email: "op://Personal/GitHub/email"
-    allowed_signers: "op://Personal/lirin SSH/allowed_signers"
-  ssh:
-    github:
-      lirin:
-        - name: id_ed25519
-          vault_path: "op://Personal/lirin SSH"
-        - name: raft-infra
-          vault_path: "op://Raft/Raft-SSH"
-# FIXME: See `system/tasks/main.yml` for how to structure this var looping.
-  # system:
-  #   hosts:
-  #     - item: op://Raft/rdp-demo-local-ingress/notesPlain
-  #       account: my.1password.com
-
-go:
-  packages:
-    - package: github.com/go-task/task/v3/cmd/task@latest
-      cmd: task
-    - package: github.com/gcla/termshark/v2/cmd/termshark@v2.4.0
-      cmd: termshark
