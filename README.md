@@ -1,4 +1,4 @@
-# 🚧 WARNING: THIS PROJECT IS A WORK IN PROGRESS 🚧
+# 🚧 WARNING: THIS PROJECT IS A WORK IN PROGRESS
 
 ### 💀 THIS IS NOT A FINISHED PRODUCT. 💀
 This project is under active development, barely functional, and highly unstable.
@@ -16,7 +16,7 @@ The current setup is almost entirely based on his foundation, and I’m graduall
 <hr>
 <hr>
 
-# 🚀 dotfiles
+# 🚀 DevRig
 
 <img align="right" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTI4NzE1dmhtcm04c3dlN29iaG4zd2owZHBwczJxbXYwOHVtdGZiaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/aer096d3vD4rYVsgNn/giphy.gif" width="200" height="200" />
 <p><i>One command to rule them all - your personal Ubuntu dev environment automation</i></p>
@@ -88,10 +88,10 @@ The current setup is almost entirely based on his foundation, and I’m graduall
 
 ```bash
 # Clone this repository
-git clone https://github.com/fn-jakubkarp/dotfiles.git
+git clone https://github.com/fn-jakubkarp/DevRig.git
 
 # Navigate to the project directory
-cd dotfiles
+cd DevRig
 
 # Run the setup script
 ./setup.sh
