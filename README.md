@@ -1,3 +1,21 @@
+# 🚧 WARNING: THIS PROJECT IS A WORK IN PROGRESS 🚧
+
+### 💀 THIS IS NOT A FINISHED PRODUCT. 💀
+This project is under active development, barely functional, and highly unstable.
+<br/>
+Things will break, features will be missing, and your system might end up in a weird state if you run it blindly.
+
+### 🏗️ Foundation Built on TechDufus' Work
+Let’s be real–this project started by "borrowing" awesome work of [TechDufus](https://github.com/TechDufus). 
+The current setup is almost entirely based on his foundation, and I’m gradually adding my own changes to make it more usable for me (and hopefully for others too).
+
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+
 # 🚀 dotfiles
 
 <img align="right" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTI4NzE1dmhtcm04c3dlN29iaG4zd2owZHBwczJxbXYwOHVtdGZiaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/aer096d3vD4rYVsgNn/giphy.gif" width="200" height="200" />
@@ -178,3 +196,29 @@ Inspired by the fantastic work of:
   <p>Made with ❤️ by <a href="https://github.com/qunikarp">Jakub Karp</a></p>
   <p>If you find this useful as a starting point for your own automation, consider <a href="https://github.com/qunikarp/devrig">giving it a ⭐</a></p>
 </div>
+
+
+## ⚙️ Customization (not implemented yet)
+
+Edit the `config.yml` file to customize your installation:
+
+```yaml
+# Example configuration
+user:
+  name: "Your Name"
+  email: "your.email@example.com"
+
+# Choose which components to install
+components:
+  neovim: true
+  vscode: true
+  docker: true
+  i3wm: false
+  
+# Language-specific tools
+languages:
+  javascript: true
+  python: true
+  go: false
+  rust: false
+```
