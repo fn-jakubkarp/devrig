@@ -1,19 +1,40 @@
-# Template for later usage
-# Example configuration
 user:
   name: "Your Name"
   email: "your.email@example.com"
 
-# Choose which components to install
-components:
+default:
+  fonts: true
+  git: true
+  zoxide: true
+  zsh: true
+
+terminal:
   neovim: true
   tmux: true
-  vscode: false
   i3wm: false
-  
-# Language-specific tools
+
 languages:
   javascript: true
+  nvm: true
+  npm: true
   python: true
-  go: false
-  rust: false
+  go: true
+  rust: true
+  lua: true # required for nvim
+
+utility:
+  bat: true
+  btop: true
+  docker: true
+  flatpak: true
+  vscode: false
+  tldr: true
+  nerdfetch: true # required for nvim
+  neofetch: true # required for nvim
+  lazygit: true
+  gh: true
+  fzf: true # required by nvim, zsh, tmux
+
+flatpak_software:
+  discord: false
+
