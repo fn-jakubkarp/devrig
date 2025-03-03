@@ -1,27 +1,41 @@
-default_roles:
-  - bash
-  - bat
-  - btop
-  - discord
-  - docker
-  - flatpak
-  - fonts
-  - fzf
-  - gh
-  - git
-  - go
-  - lazygit
-  - lua
-  - neofetch
-  - neovim
-  - nerdfetch
-  - npm
-  - nvm
-  - python
-  - rust
-  # - starship 
-  - taskfile
-  - tldr
-  - tmux
-  - zoxide
-  - zsh
+# - name: Load external config file
+#   ansible.builtin.include_vars:
+#     file: "{{ playbook_dir }}/config.yml"
+
+# Load roles dynamically from rig_config.yml
+enabled_roles: >-
+  {{ (default | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) +
+     (terminal | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) +
+     (languages | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) +
+     (utility | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) +
+     (flatpak_software | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) }}
+
+exclude_roles: []
+
+# default_roles:
+#   - bash
+#   - bat
+#   - btop
+#   - discord
+#   - docker
+#   - flatpak
+#   - fonts
+#   - fzf
+#   - gh
+#   - git
+#   - go
+#   - lazygit
+#   - lua
+#   - neofetch
+#   - neovim
+#   - nerdfetch
+#   - npm
+#   - nvm
+#   - python
+#   - rust
+#   - starship 
+#   - taskfile
+#   - tldr
+#   - tmux
+#   - zoxide
+#   - zsh
