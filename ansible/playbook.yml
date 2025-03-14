@@ -75,24 +75,19 @@
           (flatpak_software | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list) }}"
 
 
-    - name: Run roles based on config.yml
-      block:
-        - name: Check if role exists
-          ansible.builtin.stat:
-            path: "{{ playbook_dir }}/roles/{{ roles_item }}"
-          register: role_check
-          tags:
-            - always
-
-        - name: Include role if it exists
-          ansible.builtin.include_role:
-            name: "{{ roles_item }}"
-          when: role_check.stat.exists
-          tags:
-            - always
+    - name: Check if roles exist
+      ansible.builtin.stat:
+        path: "{{ playbook_dir }}/roles/{{ item }}"
+      register: role_check
       loop: "{{ run_roles }}"
-      loop_control:
-        loop_var: roles_item
+      tags:
+        - always
+
+    - name: Include roles if they exist
+      ansible.builtin.include_role:
+        name: "{{ item.item }}"
+      when: item.stat.exists
+      loop: "{{ role_check.results }}"
       tags:
         - always
 
