@@ -6,7 +6,7 @@
   pre_tasks:
     - name: Load external config file
       ansible.builtin.include_vars:
-        file: "rig_config.yml"
+      file: "{{ playbook_dir }}/../rig_config.yml"
       tags:
         - always
 
