@@ -5,32 +5,31 @@ user:
 
 # Choose which components to install
 components:
-  # neovim: false
-  # tmux: false
-  # vscode: false
-  # i3wm: false
+  neovim: false
+  tmux: false
+  vscode: false
+  i3wm: false
   zsh: true
-  git: true
 
 languages:
-  # javascript: true
-  # python: true
-  # go: true
-  # rust: true
-  # lua: true # required for nvim
+  javascript: true
+  python: true
+  go: true
+  rust: true
+  lua: true # required for nvim
 
 utility:
-  # bat: true
-  # btop: true
-  # docker: true
-  # flatpak: true
-  # vscode: false
-  # tldr: true
-  # nvm: true
-  # npm: true
-  # nerdfetch: true # required for nvim
-  # neofetch: true # required for nvim
-  # lazygit: true
+  bat: true
+  btop: true
+  docker: true
+  flatpak: true
+  vscode: false
+  tldr: true
+  nvm: true
+  npm: true
+  nerdfetch: true # required for nvim
+  neofetch: true # required for nvim
+  lazygit: true
   gh: true
   fzf: true # required by nvim, zsh, tmux
 

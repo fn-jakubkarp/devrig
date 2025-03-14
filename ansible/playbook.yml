@@ -76,10 +76,23 @@
 
 
     - name: Run roles based on config.yml
-      ansible.builtin.include_role:
-        name: "{{ roles_item }}"
+      block:
+        - name: Check if role exists
+          ansible.builtin.stat:
+            path: "{{ playbook_dir }}/roles/{{ roles_item }}"
+          register: role_check
+          tags:
+            - always
+
+        - name: Include role if it exists
+          ansible.builtin.include_role:
+            name: "{{ roles_item }}"
+          when: role_check.stat.exists
+          tags:
+            - always
       loop: "{{ run_roles }}"
       loop_control:
         loop_var: roles_item
       tags:
         - always
+
