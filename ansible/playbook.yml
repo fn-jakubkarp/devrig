@@ -54,13 +54,13 @@
     - name: Compute enabled roles from config.yml
       ansible.builtin.set_fact:
         run_roles: >-
-          {{ (default | default({}) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) +
-             (terminal | default({}) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) +
-             (languages | default({}) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) +
-             (utility | default({}) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) +
-             (flatpak_software | default({}) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key')) }}
+          {{ (components | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list +
+             (languages | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list +
+             (utility | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list +
+             (flatpak_software | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list }}
       tags:
         - always
+
 
     - name: Expand role dependencies
       ansible.builtin.set_fact:
@@ -68,7 +68,12 @@
 
     - name: Remove explicitly disabled roles
       ansible.builtin.set_fact:
-        run_roles: "{{ run_roles | difference((default + terminal + languages + utility + flatpak_software) | default({}) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list) }}"
+        run_roles: "{{ run_roles | difference(
+          (components | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list +
+          (languages | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list +
+          (utility | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list +
+          (flatpak_software | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list) }}"
+
 
     - name: Run roles based on config.yml
       ansible.builtin.include_role:
