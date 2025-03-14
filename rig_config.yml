@@ -15,8 +15,6 @@ terminal:
 
 languages:
   javascript: true
-  nvm: true
-  npm: true
   python: true
   go: true
   rust: true
@@ -29,6 +27,8 @@ utility:
   flatpak: true
   vscode: false
   tldr: true
+  nvm: true
+  npm: true
   nerdfetch: true # required for nvim
   neofetch: true # required for nvim
   lazygit: true
