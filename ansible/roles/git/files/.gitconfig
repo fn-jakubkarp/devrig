@@ -1,7 +1,7 @@
 [user]
-	name = Jakub Karp
-	email = quni.inne@gmail.com
-	username = jakubkarp
+	name = {{ user.name }}
+	email = {{ user.email }}
+	username = {{ user.username }}
 [init]
 	defaultBranch = main
 [color]
@@ -22,7 +22,7 @@
 	untracked = red bold
 
 [github]
-	user = jakubkarp
+	user = {{ user.username }}
 	token = token
 [gitflow "prefix"]
 	versiontag = v

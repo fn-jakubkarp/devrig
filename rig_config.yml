@@ -1,16 +1,13 @@
 user:
   name: "Your Name"
   email: "your.email@example.com"
+  username: "your_github_username"
 
-default:
-  fonts: true
-  git: true
-  zoxide: true
-  zsh: true
-
-terminal:
-  neovim: true
-  tmux: true
+# Choose which components to install
+components:
+  neovim: false
+  tmux: false
+  vscode: false
   i3wm: false
 
 languages:
