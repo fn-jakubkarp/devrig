@@ -1,6 +1,13 @@
 ---
-- name: "Zsh | Set default terminal"
+- name: "ZSH | Ubuntu | Install zsh package"
+  ansible.builtin.apt:
+    name: zsh
+    state: present
+    update_cache: yes
+  become: true
+
+- name: "ZSH | Set zsh as default shell"
   ansible.builtin.user:
-    name: "{{ host_user }}"
+    name: "{{ ansible_user_id }}"
     shell: /usr/bin/zsh
   become: true

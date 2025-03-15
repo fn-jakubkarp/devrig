@@ -40,3 +40,9 @@ info "Initializing 20_ssh.sh setup..."
 run_with_sudo bash ./source/20_ssh.sh
 
 success "All setup tasks completed successfully!"
+
+
+# Post-installation source reload is required
+info "Reloading shell configuration..."
+warning "NOT IMPLEMENTED YET"
+# 

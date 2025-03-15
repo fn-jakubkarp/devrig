@@ -1,0 +1,9 @@
+---
+- name: "Ubuntu | Install common packages "
+  ansible.builtin.apt:
+    name:
+      - git
+      - curl
+      - wget
+    state: present
+  become: true
