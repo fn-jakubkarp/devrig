@@ -1,54 +1,106 @@
+# main.yml
 ---
-- name: "{{ role_name }} | Checking for Distribution Config: {{ ansible_distribution }}"
+- name: "ZSH | Set role variables"
+  ansible.builtin.set_fact:
+    zsh_user: "{{ ansible_user_id }}"
+    zsh_home: "{{ ansible_user_dir }}"
+    zsh_config_dir: "{{ ansible_user_dir }}/.config/zsh"
+    role_name: "zsh"
+
+- name: "ZSH | Ensure ZSH config directory exists"
+  ansible.builtin.file:
+    path: "{{ zsh_config_dir }}"
+    state: directory
+    mode: "0755"
+  become: false
+
+- name: "ZSH | Check for distribution-specific tasks"
   ansible.builtin.stat:
     path: "{{ role_path }}/tasks/{{ ansible_distribution }}.yml"
   register: distribution_config
 
-- name: "{{ role_name }} | Run Tasks: {{ ansible_distribution }}"
+- name: "ZSH | Run distribution-specific tasks"
   ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
   when: distribution_config.stat.exists
 
-- name: "ZSH | Copy .zshrc"
+- name: "ZSH | Check current default shell"
+  ansible.builtin.shell: "echo $SHELL"
+  register: current_shell
+  changed_when: false
+  check_mode: false
+  become: false
+
+- name: "ZSH | Copy .zshrc configuration"
   ansible.builtin.copy:
     src: ".zshrc"
-    dest: "{{ ansible_user_dir }}/.zshrc"
+    dest: "{{ zsh_home }}/.zshrc"
     mode: "0644"
+    backup: yes
+  become: false  # Run as the regular user
 
-- name: "ZSH | Copy .p10k.zsh"
+- name: "ZSH | Copy .p10k.zsh configuration"
   ansible.builtin.copy:
     src: ".p10k.zsh"
-    dest: "{{ ansible_user_dir }}/.p10k.zsh"
+    dest: "{{ zsh_home }}/.p10k.zsh"
     mode: "0644"
+    backup: yes
+  become: false  # Run as the regular user
 
-- name: "ZSH | Copy custom zsh config"
+- name: "ZSH | Ensure ZSH config directory exists"
+  ansible.builtin.file:
+    path: "{{ zsh_home }}/.config/zsh"
+    state: directory
+    mode: "0755"
+  become: false  # Run as the regular user
+
+- name: "ZSH | Copy base ZSH configuration files"
   ansible.builtin.copy:
-    dest: "{{ ansible_user_dir }}/.config/"
-    src: "zsh"
+    src: "zsh/"
+    dest: "{{ zsh_home }}/.config/zsh/"
     mode: "0644"
     directory_mode: "0755"
-    force: true
+  become: false  # Run as the regular user
 
-- name: "ZSH | {{ ansible_distribution }} | Identify distribution config"
+- name: "ZSH | Check for distribution-specific config"
   ansible.builtin.stat:
     path: "{{ role_path }}/files/os/{{ ansible_distribution }}"
   register: zsh_os_distribution_config
 
-- name: "ZSH | {{ ansible_os_family }} | Identify os family config"
+- name: "ZSH | Check for OS family config"
   ansible.builtin.stat:
     path: "{{ role_path }}/files/os/{{ ansible_os_family }}"
   register: zsh_os_family_config
   when: not zsh_os_distribution_config.stat.exists
 
-- name: "ZSH | Calculate os config src"
+- name: "ZSH | Set OS config source"
   ansible.builtin.set_fact:
-    zsh_os_config: "{{ zsh_os_distribution_config if zsh_os_distribution_config.stat.exists else zsh_os_family_config }}"
+    zsh_os_config_src: >-
+      {% if zsh_os_distribution_config.stat.exists %}
+      {{ role_path }}/files/os/{{ ansible_distribution }}
+      {% elif zsh_os_family_config.stat.exists %}
+      {{ role_path }}/files/os/{{ ansible_os_family }}
+      {% else %}
+      ""
+      {% endif %}
 
-- name: "ZSH | Copy custom zsh config for os: {{ zsh_os_config.stat.path | basename }}"
+- name: "ZSH | Copy OS-specific ZSH configuration"
   ansible.builtin.copy:
-    dest: "{{ ansible_user_dir }}/.config/zsh/"
-    src: "{{ zsh_os_config.stat.path }}/"
+    src: "{{ zsh_os_config_src }}/"
+    dest: "{{ zsh_home }}/.config/zsh/"
     mode: "0644"
-    force: true
-  when:
-    - zsh_os_config is defined
-    - zsh_os_config.stat.exists
+  become: false 
+  when: zsh_os_config_src != ""
+
+# Ubuntu.yml
+---
+- name: "ZSH | Ubuntu | Install ZSH package"
+  ansible.builtin.apt:
+    name: zsh
+    state: present
+    update_cache: yes
+
+- name: "ZSH | Ubuntu | Set ZSH as default shell"
+  ansible.builtin.user:
+    name: "{{ zsh_user }}"
+    shell: /usr/bin/zsh
+  when: "'/zsh' not in current_shell.stdout"

@@ -1,13 +1,19 @@
 ---
-- name: "ZSH | Ubuntu | Install zsh package"
+- name: "ZSH | Ubuntu | Update apt cache"
   ansible.builtin.apt:
-    name: zsh
-    state: present
     update_cache: yes
   become: true
+  changed_when: false
 
-- name: "ZSH | Set zsh as default shell"
+- name: "ZSH | Ubuntu | Check if ZSH is already the default shell"
+  ansible.builtin.command: "echo $SHELL"
+  register: current_shell
+  changed_when: false
+  check_mode: false
+
+- name: "ZSH | Ubuntu | Set ZSH as default shell"
   ansible.builtin.user:
-    name: "{{ ansible_user_id }}"
+    name: "{{ zsh_user }}"
     shell: /usr/bin/zsh
   become: true
+  when: "'/zsh' not in current_shell.stdout"
