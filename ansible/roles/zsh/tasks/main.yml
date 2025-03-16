@@ -43,3 +43,6 @@
     src: "config/git_functions.zsh"
     dest: "{{ zsh_config_dir }}/functions/git_functions.zsh"
     mode: '0644'
+
+
+## TODO: copy zsh

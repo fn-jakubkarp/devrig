@@ -17,3 +17,4 @@
     shell: /usr/bin/zsh
   become: true
   when: "'/zsh' not in current_shell.stdout"
+
