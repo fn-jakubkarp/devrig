@@ -1,6 +1,4 @@
 ---
-# tasks/main.yml - Main tasks for zsh role
-
 - name: "ZSH | Set role variables"
   ansible.builtin.set_fact:
     zsh_config_dir: "{{ ansible_env.HOME }}/.zsh"
@@ -12,16 +10,18 @@
   ansible.builtin.package:
     name: zsh
     state: present
-
+  
 - name: "ZSH | Ensure configuration directories exist"
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ dir_item }}"
     state: directory
     mode: '0755'
-  with_items:
+  loop:
     - "{{ zsh_config_dir }}"
     - "{{ zsh_config_dir }}/functions"
     - "{{ zsh_config_dir }}/aliases"
+  loop_control:
+    loop_var: dir_item
 
 - name: "ZSH | Check for distribution-specific tasks"
   ansible.builtin.stat:
@@ -34,21 +34,25 @@
 
 - name: "ZSH | Copy alias files"
   ansible.builtin.copy:
-    src: "config/{{ item }}"
-    dest: "{{ zsh_config_dir }}/aliases/{{ item }}"
+    src: "config/{{ alias_item }}"
+    dest: "{{ zsh_config_dir }}/aliases/{{ alias_item }}"
     mode: '0644'
-  with_items:
+  loop:
     - "git_aliases.zsh"
     - "neovim_aliases.zsh"
+  loop_control:
+    loop_var: alias_item
 
 - name: "ZSH | Copy function files"
   ansible.builtin.copy:
-    src: "config/{{ item }}"
-    dest: "{{ zsh_config_dir }}/functions/{{ item }}"
+    src: "config/{{ function_item }}"
+    dest: "{{ zsh_config_dir }}/functions/{{ function_item }}"
     mode: '0644'
-  with_items:
+  loop:
     - "git_functions.zsh"
     - "neovim_functions.zsh"
+  loop_control:
+    loop_var: function_item
 
 - name: "ZSH | Copy OS-specific functions"
   ansible.builtin.copy:
@@ -59,13 +63,15 @@
 
 - name: "ZSH | Copy ZSH config files"
   ansible.builtin.copy:
-    src: "config/{{ item }}"
-    dest: "{{ zsh_config_dir }}/{{ item }}"
+    src: "config/{{ config_item }}"
+    dest: "{{ zsh_config_dir }}/{{ config_item }}"
     mode: '0644'
-  with_items:
+  loop:
     - "fzf_config.zsh"
     - "history.zsh"
     - "vars.zsh"
+  loop_control:
+    loop_var: config_item
 
 - name: "ZSH | Install Starship prompt"
   ansible.builtin.include_tasks: "{{ role_path }}/utils/starship.yml"
