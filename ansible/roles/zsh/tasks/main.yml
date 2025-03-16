@@ -68,7 +68,7 @@
     - "vars.zsh"
 
 - name: "ZSH | Install Starship prompt"
-  ansible.builtin.include_tasks: "{{ role_path }}/tasks/starship.yml"
+  ansible.builtin.include_tasks: "{{ role_path }}/utils/starship.yml"
 
 - name: "ZSH | Copy .zshrc configuration file"
   ansible.builtin.copy:
