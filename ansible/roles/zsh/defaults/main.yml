@@ -1,0 +1,9 @@
+zsh_user: "{{ ansible_env.USER | default(ansible_user_id) }}"
+
+# Configuration paths
+zsh_config_dir: "{{ ansible_env.HOME }}/.zsh"
+zsh_config_file: "{{ ansible_env.HOME }}/.zshrc"
+
+# Installation options
+zsh_force_install: false       # Force reinstallation even if already installed
+zsh_set_default_shell: true    # Set zsh as default shell for user

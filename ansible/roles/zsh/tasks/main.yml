@@ -1,18 +1,27 @@
-# main.yml
 ---
+# tasks/main.yml - Main tasks for zsh role
+
 - name: "ZSH | Set role variables"
   ansible.builtin.set_fact:
-    zsh_user: "{{ ansible_user_id }}"
-    zsh_home: "{{ ansible_user_dir }}"
-    zsh_config_dir: "{{ ansible_user_dir }}/.config/zsh"
-    role_name: "zsh"
+    zsh_config_dir: "{{ ansible_env.HOME }}/.zsh"
+    zsh_config_file: "{{ ansible_env.HOME }}/.zshrc"
+    zsh_user: "{{ ansible_env.USER | default(ansible_user_id) }}"
 
-- name: "ZSH | Ensure ZSH config directory exists"
+- name: "ZSH | Ensure ZSH is installed"
+  become: true
+  ansible.builtin.package:
+    name: zsh
+    state: present
+
+- name: "ZSH | Ensure configuration directories exist"
   ansible.builtin.file:
-    path: "{{ zsh_config_dir }}"
+    path: "{{ item }}"
     state: directory
-    mode: "0755"
-  become: false
+    mode: '0755'
+  with_items:
+    - "{{ zsh_config_dir }}"
+    - "{{ zsh_config_dir }}/functions"
+    - "{{ zsh_config_dir }}/aliases"
 
 - name: "ZSH | Check for distribution-specific tasks"
   ansible.builtin.stat:
@@ -23,84 +32,14 @@
   ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
   when: distribution_config.stat.exists
 
-- name: "ZSH | Check current default shell"
-  ansible.builtin.shell: "echo $SHELL"
-  register: current_shell
-  changed_when: false
-  check_mode: false
-  become: false
-
-- name: "ZSH | Copy .zshrc configuration"
+- name: "ZSH | Copy git aliases"
   ansible.builtin.copy:
-    src: ".zshrc"
-    dest: "{{ zsh_home }}/.zshrc"
-    mode: "0644"
-    backup: yes
-  become: false  # Run as the regular user
+    src: "config/git_aliases.zsh"
+    dest: "{{ zsh_config_dir }}/aliases/git_aliases.zsh"
+    mode: '0644'
 
-- name: "ZSH | Copy .p10k.zsh configuration"
+- name: "ZSH | Copy git functions"
   ansible.builtin.copy:
-    src: ".p10k.zsh"
-    dest: "{{ zsh_home }}/.p10k.zsh"
-    mode: "0644"
-    backup: yes
-  become: false  # Run as the regular user
-
-- name: "ZSH | Ensure ZSH config directory exists"
-  ansible.builtin.file:
-    path: "{{ zsh_home }}/.config/zsh"
-    state: directory
-    mode: "0755"
-  become: false  # Run as the regular user
-
-- name: "ZSH | Copy base ZSH configuration files"
-  ansible.builtin.copy:
-    src: "zsh/"
-    dest: "{{ zsh_home }}/.config/zsh/"
-    mode: "0644"
-    directory_mode: "0755"
-  become: false  # Run as the regular user
-
-- name: "ZSH | Check for distribution-specific config"
-  ansible.builtin.stat:
-    path: "{{ role_path }}/files/os/{{ ansible_distribution }}"
-  register: zsh_os_distribution_config
-
-- name: "ZSH | Check for OS family config"
-  ansible.builtin.stat:
-    path: "{{ role_path }}/files/os/{{ ansible_os_family }}"
-  register: zsh_os_family_config
-  when: not zsh_os_distribution_config.stat.exists
-
-- name: "ZSH | Set OS config source"
-  ansible.builtin.set_fact:
-    zsh_os_config_src: >-
-      {% if zsh_os_distribution_config.stat.exists %}
-      {{ role_path }}/files/os/{{ ansible_distribution }}
-      {% elif zsh_os_family_config.stat.exists %}
-      {{ role_path }}/files/os/{{ ansible_os_family }}
-      {% else %}
-      ""
-      {% endif %}
-
-- name: "ZSH | Copy OS-specific ZSH configuration"
-  ansible.builtin.copy:
-    src: "{{ zsh_os_config_src }}/"
-    dest: "{{ zsh_home }}/.config/zsh/"
-    mode: "0644"
-  become: false 
-  when: zsh_os_config_src != ""
-
-# Ubuntu.yml
----
-- name: "ZSH | Ubuntu | Install ZSH package"
-  ansible.builtin.apt:
-    name: zsh
-    state: present
-    update_cache: yes
-
-- name: "ZSH | Ubuntu | Set ZSH as default shell"
-  ansible.builtin.user:
-    name: "{{ zsh_user }}"
-    shell: /usr/bin/zsh
-  when: "'/zsh' not in current_shell.stdout"
+    src: "config/git_functions.zsh"
+    dest: "{{ zsh_config_dir }}/functions/git_functions.zsh"
+    mode: '0644'
