@@ -32,17 +32,46 @@
   ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
   when: distribution_config.stat.exists
 
-- name: "ZSH | Copy git aliases"
+- name: "ZSH | Copy alias files"
   ansible.builtin.copy:
-    src: "config/git_aliases.zsh"
-    dest: "{{ zsh_config_dir }}/aliases/git_aliases.zsh"
+    src: "config/{{ item }}"
+    dest: "{{ zsh_config_dir }}/aliases/{{ item }}"
     mode: '0644'
+  with_items:
+    - "git_aliases.zsh"
+    - "neovim_aliases.zsh"
 
-- name: "ZSH | Copy git functions"
+- name: "ZSH | Copy function files"
   ansible.builtin.copy:
-    src: "config/git_functions.zsh"
-    dest: "{{ zsh_config_dir }}/functions/git_functions.zsh"
+    src: "config/{{ item }}"
+    dest: "{{ zsh_config_dir }}/functions/{{ item }}"
     mode: '0644'
+  with_items:
+    - "git_functions.zsh"
+    - "neovim_functions.zsh"
 
+- name: "ZSH | Copy OS-specific functions"
+  ansible.builtin.copy:
+    src: "commands/{{ ansible_distribution }}/os_functions.zsh"
+    dest: "{{ zsh_config_dir }}/functions/os_functions.zsh"
+    mode: '0644'
+  when: ansible_distribution in ['Ubuntu', 'MacOSX']
 
-## TODO: copy zsh
+- name: "ZSH | Copy ZSH config files"
+  ansible.builtin.copy:
+    src: "config/{{ item }}"
+    dest: "{{ zsh_config_dir }}/{{ item }}"
+    mode: '0644'
+  with_items:
+    - "fzf_config.zsh"
+    - "history.zsh"
+    - "vars.zsh"
+
+- name: "ZSH | Install Starship prompt"
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/starship.yml"
+
+- name: "ZSH | Copy .zshrc configuration file"
+  ansible.builtin.copy:
+    src: "config/.zshrc"
+    dest: "{{ zsh_config_file }}"
+    mode: '0644'
