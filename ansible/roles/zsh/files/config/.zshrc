@@ -23,4 +23,23 @@
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
+# Initialize Starship prompt
 eval "$(starship init zsh)"
+
+# Set ZSH configuration directory
+export ZSH_CONFIG_DIR="$HOME/.zsh"
+
+# Source all alias files
+for alias_file in $ZSH_CONFIG_DIR/aliases/*.zsh; do
+  [ -f "$alias_file" ] && source "$alias_file"
+done
+
+# Source all function files
+for function_file in $ZSH_CONFIG_DIR/functions/*.zsh; do
+  [ -f "$function_file" ] && source "$function_file"
+done
+
+# Source additional ZSH config files
+for config_file in $ZSH_CONFIG_DIR/*.zsh; do
+  [ -f "$config_file" ] && source "$config_file"
+done
