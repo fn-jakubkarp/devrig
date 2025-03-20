@@ -23,11 +23,23 @@
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
+
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+export ZSH_CONFIG_DIR="$HOME/.config/zsh"
+export ZSH="$HOME/.oh-my-zsh"
+
+ZSH_THEME="agnoster"
+plugins=(
+  git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  fzf
+)
+
+
 # Initialize Starship prompt
 eval "$(starship init zsh)"
 
-# Set ZSH configuration directory
-export ZSH_CONFIG_DIR="$HOME/.zsh"
 
 # Source all alias files
 for alias_file in $ZSH_CONFIG_DIR/aliases/*.zsh; do

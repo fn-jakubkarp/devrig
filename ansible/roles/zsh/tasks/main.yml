@@ -1,16 +1,17 @@
----
 - name: "ZSH | Set role variables"
   ansible.builtin.set_fact:
-    zsh_config_dir: "{{ ansible_env.HOME }}/.zsh"
-    zsh_config_file: "{{ ansible_env.HOME }}/.zshrc"
+    zsh_config_dir: "{{ ansible_env.HOME }}/.config/zsh"
+    zsh_config_file: "{{ ansible_env.HOME }}/.config/zsh/.zshrc"
     zsh_user: "{{ ansible_env.USER | default(ansible_user_id) }}"
+    starship_config_dir: "{{ ansible_env.HOME }}/.config/starship"
+    starship_config_file: "{{ ansible_env.HOME }}/.config/starship/starship.toml"
 
 - name: "ZSH | Ensure ZSH is installed"
   become: true
   ansible.builtin.package:
     name: zsh
     state: present
-  
+
 - name: "ZSH | Ensure configuration directories exist"
   ansible.builtin.file:
     path: "{{ dir_item }}"
@@ -22,6 +23,9 @@
     - "{{ zsh_config_dir }}/aliases"
   loop_control:
     loop_var: dir_item
+
+- name: "ZSH | Install Oh My Zsh"
+  ansible.builtin.include_tasks: "../../utils/ohmyzsh.yml"
 
 - name: "ZSH | Check for distribution-specific tasks"
   ansible.builtin.stat:
@@ -74,10 +78,22 @@
     loop_var: config_item
 
 - name: "ZSH | Install Starship prompt"
-  ansible.builtin.include_tasks: "{{ role_path }}/utils/starship.yml"
+  ansible.builtin.include_tasks: "../../utils/starship.yml"
 
 - name: "ZSH | Copy .zshrc configuration file"
   ansible.builtin.copy:
     src: "config/.zshrc"
     dest: "{{ zsh_config_file }}"
     mode: '0644'
+
+- name: "ZSH | Setup custom Starship prompt"
+  ansible.builtin.copy:
+    src: "config/starship.toml"
+    dest: "{{ starship_config_file }}"
+    mode: '0644'
+
+- name: "ZSH | Ensure .zshrc sources the Starship prompt"
+  ansible.builtin.lineinfile:
+    path: "{{ zsh_config_file }}"
+    line: 'eval "$(starship init zsh)"'
+    create: yes
