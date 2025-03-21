@@ -1,31 +1,3 @@
 # Load roles dynamically from rig_config.yml
 enabled_roles: []
 exclude_roles: []
-
-# default_roles:
-#   - bash
-#   - bat
-#   - btop
-#   - discord
-#   - docker
-#   - flatpak
-#   - fonts
-#   - fzf
-#   - gh
-#   - git
-#   - go
-#   - lazygit
-#   - lua
-#   - neofetch
-#   - neovim
-#   - nerdfetch
-#   - npm
-#   - nvm
-#   - python
-#   - rust
-#   - starship 
-#   - taskfile
-#   - tldr
-#   - tmux
-#   - zoxide
-#   - zsh

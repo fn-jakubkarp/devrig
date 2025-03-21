@@ -1,10 +1,10 @@
 - name: "ZSH | Set role variables"
   ansible.builtin.set_fact:
-    zsh_config_dir: "{{ ansible_env.HOME }}/.config/zsh"
-    zsh_config_file: "{{ ansible_env.HOME }}/.config/zsh/.zshrc"
-    zsh_user: "{{ ansible_env.USER | default(ansible_user_id) }}"
-    starship_config_dir: "{{ ansible_env.HOME }}/.config/starship"
-    starship_config_file: "{{ ansible_env.HOME }}/.config/starship/starship.toml"
+    zsh_config_dir: "{{ zsh_config_dir }}"
+    zsh_config_file: "{{ zsh_config_file }}"
+    zsh_user: "{{ zsh_user }}"
+    starship_config_dir: "{{ starship_config_dir }}"
+    starship_config_file: "{{ starship_config_file }}"
 
 - name: "ZSH | Ensure ZSH is installed"
   become: true

@@ -1,0 +1,40 @@
+---
+# Directory paths
+zsh_config_dir: "{{ ansible_env.HOME }}/.config/zsh"
+zsh_config_file: "{{ zsh_config_dir }}/.zshrc"
+starship_config_dir: "{{ ansible_env.HOME }}/.config/starship"
+starship_config_file: "{{ starship_config_dir }}/starship.toml"
+
+# User information
+zsh_user: "{{ ansible_env.USER | default(ansible_user_id) }}"
+
+# Oh My Zsh
+ohmyzsh_dir: "{{ ansible_env.HOME }}/.oh-my-zsh"
+zsh_theme: "agnoster"
+
+# ZSH plugins
+zsh_plugins:
+  - git
+  - zsh-autosuggestions
+  - zsh-syntax-highlighting
+  - fzf
+
+# ZSH alias files
+zsh_alias_files:
+  - git_aliases.zsh
+  - neovim_aliases.zsh
+
+# ZSH function files
+zsh_function_files:
+  - git_functions.zsh
+  - neovim_functions.zsh
+
+# ZSH config files
+zsh_config_files:
+  - fzf_config.zsh
+  - history.zsh
+  - vars.zsh
+
+# Starship
+install_starship: true
+starship_url: "https://starship.rs/install.sh"
