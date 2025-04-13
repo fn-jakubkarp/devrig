@@ -3,16 +3,16 @@ home: "{{ ansible_env.HOME }}/.config"
 
 # Shell configuration
 zsh_dir: "{{ home }}/zsh"
-zsh_file: "{{ zsh_config_dir }}/.zshrc"
+zsh_file: "{{ zsh_dir }}/.zshrc"
 
 # Prompt configuration
 starship_dir: "{{ home }}/starship"
-starship_file: "{{ starship_config_dir }}/starship.toml"
+starship_file: "{{ starship_dir }}/starship.toml"
 
 # Further configuration
 nvim_dir: "{{ home }}/nvim"
 tmux_dir: "{{ home }}/tmux"
-tmux_file: "{{ tmux_config_dir }}/tmux.conf"
+tmux_file: "{{ tmux_dir }}/tmux.conf"
 
 # XDG directories (if you follow XDG spec)
 xdg_config_home: "{{ ansible_env.HOME }}/.config"

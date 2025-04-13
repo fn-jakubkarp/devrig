@@ -1,4 +1,4 @@
-dependencies:
-  neovim: [lua, fzf, nerdfetch, neofetch]
-  javascript: [nvm, npm]
-  zsh: [fzf]
+# dependencies:
+#   neovim: [lua, fzf, nerdfetch, neofetch]
+#   javascript: [nvm, npm]
+#   zsh: [fzf]
