@@ -1,4 +1,7 @@
----
+- name: "ZSH | Ubuntu | Detect user"
+  set_fact:
+    zsh_user: "{{ ansible_env.SUDO_USER | default(ansible_env.USER) }}"
+    
 - name: "ZSH | Ubuntu | Update apt cache"
   ansible.builtin.apt:
     update_cache: yes
