@@ -9,7 +9,7 @@
   changed_when: false
 
 - name: "ZSH | Ubuntu | Check if ZSH is already the default shell"
-  ansible.builtin.command: "getent passwd {{ zsh_user }} | cut -d: -f7"
+  ansible.builtin.shell: "getent passwd {{ zsh_user }} | cut -d: -f7"
   register: current_shell
   changed_when: false
 
