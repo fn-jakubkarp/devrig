@@ -72,6 +72,35 @@
       when: ansible_host_environment_is_wsl
       tags: ['setup', 'environment', 'always']
 
+    # DIRTY - CLEANUP SOMEDAY
+    - name: Set fast apt mirror
+      become: true
+      ansible.builtin.shell: |
+        sed -i 's|http://.*.ubuntu.com|http://de.archive.ubuntu.com|g' /etc/apt/sources.list
+      when:
+        - ansible_distribution == "Ubuntu"
+        - ansible_host_environment_is_wsl
+      tags: ['setup', 'environment']
+
+    - name: Force IPv4 for apt
+      become: true
+      ansible.builtin.copy:
+        dest: /etc/apt/apt.conf.d/99force-ipv4
+        content: 'Acquire::ForceIPv4 "true";'
+      when:
+        - ansible_distribution == "Ubuntu"
+        - ansible_host_environment_is_wsl
+      tags: ['setup', 'environment']
+
+    - name: Update apt cache
+      become: true
+      ansible.builtin.apt:
+        update_cache: yes
+      when:
+        - ansible_distribution == "Ubuntu"
+        - ansible_host_environment_is_wsl
+      tags: ['setup', 'environment']
+
     - name: Detect Host User (Linux/macOS)
       ansible.builtin.import_tasks: pre_tasks/whoami.yml
       tags: ['setup', 'environment', 'always']
