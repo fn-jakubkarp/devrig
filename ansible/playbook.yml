@@ -2,92 +2,133 @@
   hosts: localhost
   become: true
   connection: local
+  vars_files:
+    - "variables/all.yml"
+    - "variables/role_dependencies.yml"
 
   pre_tasks:
+    # Check and load rig_config.yml
+    - name: Check if external config file exists
+      ansible.builtin.stat:
+        path: "{{ playbook_dir }}/../rig_config.yml"
+      register: config_file_check
+      tags: ['config', 'setup', 'always']
+
+    - name: Fail if config file is missing
+      ansible.builtin.fail:
+        msg: "Required configuration file rig_config.yml not found. Please create it before running this playbook."
+      when: not config_file_check.stat.exists
+      tags: ['config', 'setup', 'always']
+
     - name: Load external config file
       ansible.builtin.include_vars:
         file: "{{ playbook_dir }}/../rig_config.yml"
-      tags:
-        - always
+      when: config_file_check.stat.exists
+      tags: ['config', 'setup', 'always']
 
-    - name: Load role dependencies
-      ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/group_vars/role_dependencies.yml"
-      tags:
-        - always
+    - name: Validate configuration
+      ansible.builtin.assert:
+        that:
+          - components is defined
+          - user is defined and user.name is defined
+          - languages is defined
+        fail_msg: "Configuration file is missing required sections. Please check the documentation."
+      tags: ['config', 'setup', 'always']
 
-    - name: Debug Loaded Variables
-      ansible.builtin.debug:
-        var: default
-      tags:
-        - always
+    # Create directory structure from all.yml
+    - name: Ensure configuration directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - "{{ home }}"
+        - "{{ zsh_dir }}"
+        - "{{ starship_dir }}"
+        - "{{ nvim_dir }}"
+        - "{{ tmux_dir }}"
+        - "{{ xdg_config_home }}"
+        - "{{ xdg_data_home }}"
+        - "{{ xdg_cache_home }}"
+      tags: ['setup', 'directories']
 
+    # Environment detection tasks
     - name: Detect WSL
       ansible.builtin.import_tasks: pre_tasks/detect_wsl.yml
-      tags:
-        - always
+      tags: ['setup', 'environment', 'always']
 
     - name: Detect WSL Environment
       ansible.builtin.debug:
         var: ansible_host_environment_is_wsl
-      tags:
-        - always
+      tags: ['setup', 'environment', 'debug']
 
     - name: Confirm Windows PowerShell Execution Policy
       ansible.builtin.import_tasks: pre_tasks/powershell_executionpolicy.yml
       when: ansible_host_environment_is_wsl
-      tags:
-        - always
+      tags: ['setup', 'environment', 'always']
 
     - name: Detect Host User (WSL)
       ansible.builtin.import_tasks: pre_tasks/whoami_wsl.yml
       when: ansible_host_environment_is_wsl
-      tags:
-        - always
+      tags: ['setup', 'environment', 'always']
 
     - name: Detect Host User (Linux/macOS)
       ansible.builtin.import_tasks: pre_tasks/whoami.yml
-      tags:
-        - always
+      tags: ['setup', 'environment', 'always']
 
   tasks:
-    - name: Compute enabled roles from config.yml
+    # Calculate what to install
+    - name: Compute enabled roles with dependencies and exclusions
       ansible.builtin.set_fact:
-        run_roles: >-
-          {{ (components | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list +
-             (languages | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list +
-             (utility | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list +
-             (flatpak_software | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list }}
-      tags:
-        - always
+        enabled_components: "{{ (components | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list }}"
+        enabled_languages: "{{ (languages | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list }}"
+        enabled_utilities: "{{ (utility | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list }}"
+        enabled_flatpaks: "{{ (flatpak_software | default({})) | dict2items | selectattr('value', 'equalto', true) | map(attribute='key') | list }}"
+        disabled_items: "{{ 
+          ((components | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list) +
+          ((languages | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list) +
+          ((utility | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list) +
+          ((flatpak_software | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list)
+        }}"
+      tags: ['setup', 'always']
 
-
-    - name: Expand role dependencies
+    - name: Combine enabled roles and add dependencies
       ansible.builtin.set_fact:
-        run_roles: "{{ run_roles + (dependencies | default({}) | dict2items | selectattr('key', 'in', run_roles) | map(attribute='value') | list | flatten) }}"
+        run_roles: "{{ 
+          (enabled_components + enabled_languages + enabled_utilities + enabled_flatpaks) | 
+          union(
+            (dependencies | default({}) | dict2items | 
+             selectattr('key', 'in', (enabled_components + enabled_languages + enabled_utilities + enabled_flatpaks)) | 
+             map(attribute='value') | list | flatten)
+          ) | 
+          difference(disabled_items) | unique
+        }}"
+      tags: ['setup', 'always']
 
-    - name: Remove explicitly disabled roles
-      ansible.builtin.set_fact:
-        run_roles: "{{ run_roles | difference(
-          (components | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list +
-          (languages | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list +
-          (utility | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list +
-          (flatpak_software | default({})) | dict2items | selectattr('value', 'equalto', false) | map(attribute='key') | list) }}"
-
-
+    # Run roles with error handling
     - name: Check if roles exist
       ansible.builtin.stat:
         path: "{{ playbook_dir }}/roles/{{ item }}"
       register: role_check
       loop: "{{ run_roles }}"
-      tags:
-        - always
+      tags: ['setup', 'always']
+
+    - name: Report missing roles
+      ansible.builtin.debug:
+        msg: "Warning: Role not found: {{ item.item }}"
+      when: not item.stat.exists
+      loop: "{{ role_check.results }}"
+      tags: ['setup', 'always']
 
     - name: Include roles if they exist
       ansible.builtin.include_role:
         name: "{{ item.item }}"
       when: item.stat.exists
       loop: "{{ role_check.results }}"
-      tags:
-        - always
+      tags: ['setup', 'always']
 
+    # Final status report
+    - name: Summarize installation
+      ansible.builtin.debug:
+        msg: "Dotfiles setup completed successfully"
+      tags: ['setup', 'always']

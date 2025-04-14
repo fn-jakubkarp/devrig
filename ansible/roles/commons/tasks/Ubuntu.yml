@@ -2,7 +2,32 @@
 - name: "Ubuntu | Install common packages "
   ansible.builtin.apt:
     name:
+      # Network utils
       - curl
       - wget
+      - nmap
+      - telnet
+      - net-tools
+      # Sys utils
+      - htop
+      - iotop
+      - lsof
+      - zip
+      - unzip
+      - tar
+      - rsync
+      # CLI tools
+      - fd-find
+      - tree
+      # Build tools
+      - build-essential
+      - make
+      - gcc
+      - g++
+      - pkg-config
+      # Dev libs
+      - libssl-dev
+      - zlib1g-dev
+      - libffi-dev
     state: present
   become: true
