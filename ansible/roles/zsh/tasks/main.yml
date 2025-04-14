@@ -1,31 +1,9 @@
-- name: "ZSH | Set role variables"
-  ansible.builtin.set_fact:
-    zsh_config_dir: "{{ zsh_config_dir }}"
-    zsh_config_file: "{{ zsh_config_file }}"
-    zsh_user: "{{ zsh_user }}"
-    starship_config_dir: "{{ starship_config_dir }}"
-    starship_config_file: "{{ starship_config_file }}"
-
+---
 - name: "ZSH | Ensure ZSH is installed"
   become: true
   ansible.builtin.package:
     name: zsh
     state: present
-
-- name: "ZSH | Ensure configuration directories exist"
-  ansible.builtin.file:
-    path: "{{ dir_item }}"
-    state: directory
-    mode: '0755'
-  loop:
-    - "{{ zsh_config_dir }}"
-    - "{{ zsh_config_dir }}/functions"
-    - "{{ zsh_config_dir }}/aliases"
-  loop_control:
-    loop_var: dir_item
-
-- name: "ZSH | Install Oh My Zsh"
-  ansible.builtin.include_tasks: "../../utils/ohmyzsh.yml"
 
 - name: "ZSH | Check for distribution-specific tasks"
   ansible.builtin.stat:
@@ -35,65 +13,64 @@
 - name: "ZSH | Run distribution-specific tasks"
   ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
   when: distribution_config.stat.exists
+  
+- name: "ZSH | Ensure configuration directories exist"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ config_dir }}"
+    - "{{ config_dir }}/functions"
+    - "{{ config_dir }}/aliases"
 
 - name: "ZSH | Copy alias files"
   ansible.builtin.copy:
-    src: "config/{{ alias_item }}"
-    dest: "{{ zsh_config_dir }}/aliases/{{ alias_item }}"
+    src: "aliases/{{ item }}"
+    dest: "{{ config_dir }}/aliases/{{ item }}"
     mode: '0644'
   loop:
-    - "git_aliases.zsh"
-    - "neovim_aliases.zsh"
-  loop_control:
-    loop_var: alias_item
+    - git_aliases.zsh
+    - aliases.zsh
 
 - name: "ZSH | Copy function files"
   ansible.builtin.copy:
-    src: "config/{{ function_item }}"
-    dest: "{{ zsh_config_dir }}/functions/{{ function_item }}"
+    src: "functions/{{ item }}"
+    dest: "{{ config_dir }}/functions/{{ item }}"
     mode: '0644'
   loop:
-    - "git_functions.zsh"
-    - "neovim_functions.zsh"
-  loop_control:
-    loop_var: function_item
+    - git_functions.zsh
 
 - name: "ZSH | Copy OS-specific functions"
   ansible.builtin.copy:
     src: "commands/{{ ansible_distribution }}/os_functions.zsh"
-    dest: "{{ zsh_config_dir }}/functions/os_functions.zsh"
+    dest: "{{ config_dir }}/functions/os_functions.zsh"
     mode: '0644'
   when: ansible_distribution in ['Ubuntu', 'MacOSX']
 
 - name: "ZSH | Copy ZSH config files"
   ansible.builtin.copy:
-    src: "config/{{ config_item }}"
-    dest: "{{ zsh_config_dir }}/{{ config_item }}"
+    src: "config/{{ item }}"
+    dest: "{{ config_dir }}/{{ item }}"
     mode: '0644'
   loop:
-    - "fzf_config.zsh"
-    - "history.zsh"
-    - "vars.zsh"
-  loop_control:
-    loop_var: config_item
-
-- name: "ZSH | Install Starship prompt"
-  ansible.builtin.include_tasks: "../../utils/starship.yml"
+    - fzf_config.zsh
+    - history.zsh
+    - starship.toml
+    - vars.zsh
 
 - name: "ZSH | Copy .zshrc configuration file"
   ansible.builtin.copy:
     src: "config/.zshrc"
-    dest: "{{ zsh_config_file }}"
+    dest: "{{ config_file }}"
     mode: '0644'
 
-- name: "ZSH | Setup custom Starship prompt"
-  ansible.builtin.copy:
-    src: "config/starship.toml"
-    dest: "{{ starship_config_file }}"
-    mode: '0644'
+- name: "ZSH | Run OS-specific tasks"
+  ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
+  when: ansible_distribution in ['Ubuntu', 'MacOSX']
 
-- name: "ZSH | Ensure .zshrc sources the Starship prompt"
-  ansible.builtin.lineinfile:
-    path: "{{ zsh_config_file }}"
-    line: 'eval "$(starship init zsh)"'
-    create: yes
+- name: "ZSH | Install Oh My Zsh"
+  ansible.builtin.include_tasks: "utils/ohmyzsh.yml"
+
+- name: "ZSH | Install Starship prompt"
+  ansible.builtin.include_tasks: "utils/starship.yml"
