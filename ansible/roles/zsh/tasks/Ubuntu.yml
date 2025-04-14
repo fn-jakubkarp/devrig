@@ -1,7 +1,7 @@
 - name: "ZSH | Ubuntu | Detect user"
-  set_fact:
+  ansible.builtin.set_fact:
     zsh_user: "{{ ansible_env.SUDO_USER | default(ansible_env.USER) }}"
-    
+
 - name: "ZSH | Ubuntu | Update apt cache"
   ansible.builtin.apt:
     update_cache: yes
@@ -9,10 +9,9 @@
   changed_when: false
 
 - name: "ZSH | Ubuntu | Check if ZSH is already the default shell"
-  ansible.builtin.command: "echo $SHELL"
+  ansible.builtin.command: "getent passwd {{ zsh_user }} | cut -d: -f7"
   register: current_shell
   changed_when: false
-  check_mode: false
 
 - name: "ZSH | Ubuntu | Set ZSH as default shell"
   ansible.builtin.user:
@@ -20,3 +19,30 @@
     shell: /usr/bin/zsh
   become: true
   when: "'/zsh' not in current_shell.stdout"
+
+- name: "ZSH | Ubuntu | Ensure fzf is installed"
+  ansible.builtin.apt:
+    name: fzf
+    state: present
+  become: true
+
+- name: "ZSH | Ubuntu | Install zsh-autosuggestions"
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    version: master
+  become: false
+
+- name: "ZSH | Ubuntu | Install zsh-syntax-highlighting"
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+    version: master
+  become: false
+
+- name: "ZSH | Ubuntu | Install you-should-use"
+  ansible.builtin.git:
+    repo: https://github.com/MichaelAquilina/zsh-you-should-use
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/you-should-use"
+    version: master
+  become: false

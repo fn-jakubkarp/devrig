@@ -1,11 +1,12 @@
----
+# roles/zsh/tasks/main.yml
+
 - name: "ZSH | Ensure ZSH is installed"
   become: true
   ansible.builtin.package:
     name: zsh
     state: present
 
-- name: "ZSH | Check for distribution-specific tasks"
+- name: "ZSH | Check for distribution-specific task file"
   ansible.builtin.stat:
     path: "{{ role_path }}/tasks/{{ ansible_distribution }}.yml"
   register: distribution_config
@@ -13,7 +14,7 @@
 - name: "ZSH | Run distribution-specific tasks"
   ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
   when: distribution_config.stat.exists
-  
+
 - name: "ZSH | Ensure configuration directories exist"
   ansible.builtin.file:
     path: "{{ item }}"
@@ -59,15 +60,11 @@
     - starship.toml
     - vars.zsh
 
-- name: "ZSH | Copy .zshrc configuration file"
+- name: "ZSH | Copy .zshrc"
   ansible.builtin.copy:
     src: "config/.zshrc"
     dest: "{{ config_file }}"
     mode: '0644'
-
-- name: "ZSH | Run OS-specific tasks"
-  ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
-  when: ansible_distribution in ['Ubuntu', 'MacOSX']
 
 - name: "ZSH | Install Oh My Zsh"
   ansible.builtin.include_tasks: "utils/ohmyzsh.yml"
